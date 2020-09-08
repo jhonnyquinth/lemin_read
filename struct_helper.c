@@ -21,23 +21,26 @@ t_rooms *init_room()
 	head->room = NULL;
 	head->x = -1;
 	head->y = -1;
+	head->cnt = 1;
 	head->next = NULL;
 
 	return head;
 }
 
-t_rooms	*add_room(t_rooms *head)
-{
-	t_rooms *curr;
+// t_rooms	*add_room(t_rooms *head)
+// {
+// 	t_rooms *curr;
 
-	curr = head;
-	while(curr && curr->next)
-	{
-		curr = curr->next;
-	}
-	curr->next = init_room();
-	return curr->next;
-}
+// 	curr = head;
+// 	while(curr && curr->next)
+// 	{
+// 		curr = curr->next;
+// 	}
+// 	curr->next = init_room();
+// 	if (curr->cnt)
+// 		(curr->next)->cnt = 1 + curr->cnt;
+// 	return curr->next;
+// }
 
 void	free_rooms(t_rooms *head)
 {
@@ -58,8 +61,8 @@ t_cnct *init_cnct()
 
 	if (!(head = (t_cnct*)malloc(sizeof(t_cnct*))))
 		return NULL;
-	head->frm=-1;
-	head->to = -1;
+	head->frm = NULL;
+	head->to = NULL;
 	head->next = NULL;
 
 	return head;

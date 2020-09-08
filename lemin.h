@@ -21,13 +21,14 @@ typedef struct 		s_rooms
 	char			*room;
 	int				x;
 	int				y;
+	int				cnt;
 	struct s_rooms	*next;
 }					t_rooms;
 
 typedef struct		s_cnct
 {
-	int				frm;
-	int				to;
+	struct s_rooms	*frm;
+	struct s_rooms	*to;
 	struct s_cnct	*next;
 }					t_cnct;
 
@@ -50,7 +51,7 @@ typedef struct 		s_read
 t_read *init_read();
 void	free_read(t_read *head);
 t_rooms *init_room();
-t_rooms	*add_room(t_rooms *head);
+// t_rooms	*add_room(t_rooms *head);
 void	free_rooms(t_rooms *head);
 t_cnct *init_cnct();
 t_cnct	*add_cnct(t_cnct *head);
