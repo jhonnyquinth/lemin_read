@@ -6,7 +6,7 @@
 /*   By: sbrynn <sbrynn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 15:46:59 by sbrynn            #+#    #+#             */
-/*   Updated: 2020/09/04 21:43:18 by sbrynn           ###   ########.fr       */
+/*   Updated: 2020/09/11 19:59:13 by sbrynn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct 		s_read
 	t_cnct			*conect;
 	int				idx;
 	char			*line;
+	char			*global_line;
 }					t_read;
 
 t_read *init_read();
@@ -63,3 +64,7 @@ void	free_cnct(t_cnct *head);
 // 	struct s_text	*next;
 // }					t_text;
 #endif
+
+/*
+чекать на старт и энд надо
+*/

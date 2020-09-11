@@ -6,7 +6,7 @@
 /*   By: sbrynn <sbrynn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:06:34 by sbrynn            #+#    #+#             */
-/*   Updated: 2020/09/04 21:43:55 by sbrynn           ###   ########.fr       */
+/*   Updated: 2020/09/11 20:43:32 by sbrynn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_rooms *init_room()
 {
 	t_rooms *head;
 
-	if (!(head = (t_rooms*)malloc(sizeof(t_rooms*))))
+	if (!(head = (t_rooms*)malloc(sizeof(t_rooms))))
 		return NULL;
 	head->room = NULL;
 	head->x = -1;
@@ -97,7 +97,7 @@ t_read *init_read()
 {
 	t_read *head;
 
-	if (!(head = (t_read*)malloc(sizeof(t_read*))))
+	if (!(head = (t_read*)malloc(sizeof(t_read))))
 		return NULL;
 	head->ant_cnt=-1;
 	head->start[0] = -1;
@@ -111,6 +111,7 @@ t_read *init_read()
 	head->rooms = NULL;
 	head->conect = NULL;
 	head->line = NULL;
+	head->global_line = NULL;
 	head->idx = 0;
 	return head;
 }
