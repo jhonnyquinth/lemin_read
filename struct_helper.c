@@ -6,7 +6,7 @@
 /*   By: sbrynn <sbrynn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:06:34 by sbrynn            #+#    #+#             */
-/*   Updated: 2020/09/11 20:43:32 by sbrynn           ###   ########.fr       */
+/*   Updated: 2020/09/11 21:18:04 by sbrynn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ void	free_read(t_read *head)
 	free_rooms(head->rooms);
 	free_cnct(head->conect);
 	free(head->line);
+	free(head->global_line);
 	free(head);
 }
 

@@ -6,7 +6,7 @@
 /*   By: sbrynn <sbrynn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 15:39:02 by sbrynn            #+#    #+#             */
-/*   Updated: 2020/09/11 20:53:59 by sbrynn           ###   ########.fr       */
+/*   Updated: 2020/09/11 21:32:27 by sbrynn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	base_check_room(t_read *reader)
 {
 	if (reader->line[reader->idx] == 'L')
 		return (1);
-	if (ft_strchr(reader->line + reader->idx, '-'))
+	if (ft_strchr(reader->line, '-'))
 		return (1);
 	return (0);
 }
@@ -157,6 +157,80 @@ int	base_check_room(t_read *reader)
 // 	return (0);
 // }
 //shit
+
+int	read_name(t_read *reader, char **name, int num)
+{
+	int	i;
+	char c;
+
+	i = reader->idx;
+	c = num == 1 ? '-' : '\0';
+	while(reader->line[i] != c)
+	{
+		if (num == 1 && !reader->line[i])
+			return (1);
+		i++;
+	}
+	*name  = ft_strsub(reader->line, reader->idx, i);
+	reader->idx = i + 1;
+	return (0);
+}
+
+int	add_name(t_read *reader, char *tmp, t_cnct *link, int num)
+{
+	t_rooms	*curr;
+	int		ok;
+
+	ok = 1;
+	curr = reader->rooms;
+	// if (!ft_strcmp(tmp, reader->start_name))
+	// {
+		
+	// } не понятно что делать со старт и энд
+	while (curr)
+	{
+		if (!ft_strcmp(curr->room, tmp))
+		{
+			ok = 0;
+			if (num == 1)
+				link->frm = curr;
+			else
+				link->to = curr;
+		}
+		curr = curr->next;
+	}
+	return(ok);
+}
+int read_link(t_read *reader)
+{
+	t_cnct *link;
+	char	*tmp;
+
+	tmp = NULL;
+	link = init_cnct();
+	if (read_name(reader,&tmp, 1))
+		return (1);
+	if (add_name(reader, tmp, link, 1))
+		return (1);
+	if (read_name(reader,&tmp, 2))
+		return (1);
+	if (add_name(reader, tmp, link, 2))
+		return (1);
+	reader->connect_cnt++;
+	return (0);
+}
+
+int	links(t_read *reader)
+{
+	while (gnl(reader) > 0)
+	{
+		if (!ft_strchr(reader->line, '-') || read_link(reader))
+			return (1);
+	}
+	return (0);
+}
+
+
 int	read_room_content(t_read *reader, t_rooms *room)
 {
 	int		i;
@@ -243,6 +317,7 @@ int	add_room(t_read *reader, t_rooms *room, int flag)
 		else 
 			curr  = room;
 	}
+	reader->room_cnt++;
 	return (0);
 }
 
@@ -303,7 +378,7 @@ int	rooms(t_read *reader)
 			//huinya po chteniu komnat uslovie v linki
 			if(read_room(reader, 2))
 			{
-				if (read_link(reader))
+				if (links(reader))//reader->start_name && reader->end_name && 
 					return (0);
 				else
 					return (1);
@@ -314,6 +389,7 @@ int	rooms(t_read *reader)
 	}
 	return(0);
 }
+
 
 // int	links(t_read *reader)
 // {
