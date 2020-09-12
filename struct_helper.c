@@ -6,7 +6,7 @@
 /*   By: sbrynn <sbrynn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:06:34 by sbrynn            #+#    #+#             */
-/*   Updated: 2020/09/11 21:18:04 by sbrynn           ###   ########.fr       */
+/*   Updated: 2020/09/12 16:23:02 by sbrynn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_cnct *init_cnct()
 {
 	t_cnct *head;
 
-	if (!(head = (t_cnct*)malloc(sizeof(t_cnct*))))
+	if (!(head = (t_cnct*)malloc(sizeof(t_cnct))))
 		return NULL;
 	head->frm = NULL;
 	head->to = NULL;

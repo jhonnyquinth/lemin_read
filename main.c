@@ -6,7 +6,7 @@
 /*   By: sbrynn <sbrynn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 15:39:02 by sbrynn            #+#    #+#             */
-/*   Updated: 2020/09/11 21:32:27 by sbrynn           ###   ########.fr       */
+/*   Updated: 2020/09/12 16:40:04 by sbrynn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int gnl(t_read *reader)
 		}
 		else
 			reader->global_line = tmp_1;
-		// free(reader->line);
+		if (reader->line)
+			free(reader->line);
 		
 	}
 	reader->idx = 0;
@@ -45,118 +46,6 @@ int	base_check_room(t_read *reader)
 		return (1);
 	return (0);
 }
-
-// int	add_enter(t_read *reader)
-// {
-// 	char *tmp;
-// 	tmp = ft_strjoin(reader->line, ft_strdup("\n"));
-// 	free(reader->line);
-// 	reader->line = tmp;
-// 	reader->idx++;
-// 	return (0);
-// }
-// int write_coords(t_read *reader, int flag, int x, int y)
-// {
-// 	t_rooms *curr;
-	
-// 	curr = reader->rooms;
-// 	if (flag == 0)
-// 	{
-// 		reader->start[0] = x;
-// 		reader->start[1] = y;
-// 	}
-// 	if (flag == 1)
-// 	{
-// 		reader->end[0] = x;
-// 		reader->end[1] = y;
-// 	}
-// 	else
-// 	{
-// 		while (curr && curr->next)
-// 			curr = curr->next;
-// 		if (!curr->room)
-// 			return (1);
-// 		curr->x = x;
-// 		curr->y = y;
-// 	}
-// 	return (0);
-// }
-
-// int	check_coords(t_read *reader, int x, int y)
-// {
-// 	t_rooms *curr;
-	
-// 	curr = reader->rooms;
-// 	if (reader->start[0] == x && reader->start[1] == y)
-// 		return (1);
-// 	if (reader->end[0] == x && reader->end[1] == y)
-// 		return (1);
-// 	while (curr && curr->next)
-// 	{
-// 		if (curr->x == x && curr->y == y)
-// 			return (1);
-// 	}
-// 	return (0);
-// }
-
-// int read_coords(t_read *reader, int flag)
-// {
-// 	int x;
-// 	int y;
-
-// 	x = ft_atoi(reader->line + reader->idx);
-// 	if (x == 0 && reader->line[reader->idx + 1] != '0')
-// 		return (1);
-// 	reader->idx++;
-// 	while (reader->line[reader->idx] == ' ')
-// 		reader->idx++;
-// 	y = ft_atoi(reader->line + reader->idx);
-// 	if (y == 0 && reader->line[reader->idx + 1] != '0')
-// 		return (1);
-// 	if (check_coords(reader, x, y) || write_coords(reader, flag, x, y)) //realize
-// 		return (1);
-// 	return (0);
-// }
-
-// int write_name(t_read *reader, int flag, )
-
-// int read_name(t_read *reader, int flag)
-// {
-// 	int		i;
-// 	char	*name;
-
-// 	i = 0;
-// 	if (base_check_room(reader))
-// 		return (1);
-// 	while (reader->line[reader->idx + i] != ' ')
-// 		if (!reader->line[reader->idx + i])
-// 			return (1);
-// 		i++;
-// 	if(!(name = (char*)malloc(sizeof(char)*(i+1))))
-// 		return (1);
-// 	ft_strncpy(name, reader->line[reader->idx], i);
-// 	reader->idx += i;
-// 	if (check_name(reader, name) || write_name)//realize
-// 		return (1);
-// 	if (flag == 0 && !reader->start_name)
-// 		reader->start_name = name;
-// 	else if (flag == 1 && !reader->end_name)
-// 		reader->end_name = name;
-// 	else if (flag == 2)
-// 	{
-
-// 	}
-// 	return (0);
-// }
-// int	read_start_end(t_read *reader, int flag);
-// {
-	
-	
-// 	if (read_coords(reader, flag) || advanced_check_room(reader, flag))
-// 		return (1);
-// 	return (0);
-// }
-//shit
 
 int	read_name(t_read *reader, char **name, int num)
 {
@@ -201,6 +90,21 @@ int	add_name(t_read *reader, char *tmp, t_cnct *link, int num)
 	}
 	return(ok);
 }
+
+int	add_link_list(t_read *reader, t_cnct *link)
+{
+	t_cnct *curr;
+
+	curr = reader->conect;
+	while (curr && curr->next)
+		curr = curr->next;
+	if (curr)
+		curr->next = link;
+	else
+		reader->conect = link;
+	return (0);
+}
+
 int read_link(t_read *reader)
 {
 	t_cnct *link;
@@ -216,16 +120,54 @@ int read_link(t_read *reader)
 		return (1);
 	if (add_name(reader, tmp, link, 2))
 		return (1);
-	reader->connect_cnt++;
+	if (ft_strcmp((link->frm)->room, (link->to)->room))
+	{
+		reader->connect_cnt++;
+		add_link_list(reader, link);
+	}
+	else
+		free_cnct(link);
+	return (0);
+}
+
+int	add_start_end(t_read *reader)
+{
+	t_rooms *curr;
+	t_rooms	*start;
+	t_rooms	*end;
+
+	curr = reader->rooms;
+	start = init_room();
+	end = init_room();
+	start->next = end;
+	start->room = reader->start_name;
+	start->x = reader->start[0];
+	start->y = reader->start[1];
+	end->room = reader->end_name;
+	end->x = reader->end[0];
+	end->y = reader->end[1];
+	while (curr && curr->next)
+		curr = curr->next;
+	if (curr)
+		curr->next = start;
+	else
+		reader->rooms = start;
 	return (0);
 }
 
 int	links(t_read *reader)
 {
+	add_start_end(reader);
+	if (!ft_strchr(reader->line, '-') || read_link(reader))
+			return (1);
 	while (gnl(reader) > 0)
 	{
+		// ft_printf("%s\n",reader->line);
 		if (!ft_strchr(reader->line, '-') || read_link(reader))
+		{
+			// ft_printf("kek\n");
 			return (1);
+		}
 	}
 	return (0);
 }
@@ -315,7 +257,7 @@ int	add_room(t_read *reader, t_rooms *room, int flag)
 		if (curr)
 			curr->next = room;
 		else 
-			curr  = room;
+			reader->rooms = room;
 	}
 	reader->room_cnt++;
 	return (0);
@@ -358,7 +300,7 @@ int	rooms(t_read *reader)
 			if (reader->start_name)
 				return (1);
 			// add_enter(reader);
-			reader->idx += 7;
+			// reader->idx += 7;
 			gnl(reader);
 			if (read_room(reader, 0))
 				return(1);
@@ -368,7 +310,7 @@ int	rooms(t_read *reader)
 			if (reader->end_name)
 				return (1);
 			// add_enter(reader);
-			reader->idx += 7;
+			// reader->idx += 7;
 			gnl(reader);
 			if (read_room(reader, 1))
 				return(1);
@@ -378,12 +320,11 @@ int	rooms(t_read *reader)
 			//huinya po chteniu komnat uslovie v linki
 			if(read_room(reader, 2))
 			{
-				if (links(reader))//reader->start_name && reader->end_name && 
-					return (0);
-				else
+				if (reader->start_name && reader->end_name && links(reader))//reader->start_name && reader->end_name && 
 					return (1);
+				else
+					return (0);
 			}
-		
 		}
 
 	}
@@ -421,8 +362,8 @@ int	main()
 
 	reader = init_read();
 	// line = NULL;
-	ft_printf("%d\n",reading(reader));
-	ft_printf("%s\n", reader->global_line);
+	ft_printf("%d\n\n",reading(reader));
+	ft_printf("%s", reader->global_line);
 	// while(i-- > 0)
 	// {
 	// 	ft_get_next_line(0, &line);
